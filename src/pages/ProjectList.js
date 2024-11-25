@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { useQuery, gql } from "@apollo/client";
 
 const GET_PROJECTS = gql`
-  query GetProjects {
-    project {
+  query GetProjects($offset: Int!, $limit: Int!) {
+    project(offset: $offset, limit: $limit) {
       id
       name
       description
@@ -15,24 +15,30 @@ const GET_PROJECTS = gql`
 `;
 
 export default function ProjectList() {
-  const { loading, error, data } = useQuery(GET_PROJECTS);
+  const [page, setPage] = useState(1);
+  const limit = 5; // تعداد آیتم‌ها در هر صفحه
+  const offset = (page - 1) * limit;
 
-  if (loading) return <p className="text-center mt-4">در حال بارگذاری...</p>;
-  if (error) return <p className="text-center mt-4">خطا: {error.message}</p>;
+  const { loading, error, data } = useQuery(GET_PROJECTS, {
+    variables: { offset, limit },
+  });
+
+  if (loading) return <p className="mt-4 text-center">در حال بارگذاری...</p>;
+  if (error) return <p className="mt-4 text-center">خطا: {error.message}</p>;
 
   return (
-    <div className="container mx-auto mt-10 p-4 rtl">
-      <div className="flex justify-between items-center mb-6">
-        <button className="flex items-center px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+    <div className="container p-4 mx-auto mt-10 rtl">
+      <div className="flex items-center justify-between mb-6">
+        <button className="flex items-center px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">
           <span>ایجاد پروژه جدید</span>
           <span className="ml-2 text-xl font-bold">+</span>
         </button>
         <h1 className="text-xl font-bold text-right">لیست پروژه‌ها</h1>
       </div>
-      <div className="overflow-x-auto bg-white shadow-md rounded-lg border border-gray-200">
-        <table className="table-auto w-full border-collapse">
+      <div className="mt-6 overflow-y-auto bg-white border border-gray-200 rounded-lg shadow-md max-h-96">
+        <table className="w-full border-collapse table-auto">
           <thead>
-            <tr className="bg-gray-100 text-right text-gray-700">
+            <tr className="text-right text-gray-700 bg-gray-100">
               <th className="px-4 py-3">ردیف</th>
               <th className="px-4 py-3">نام</th>
               <th className="px-4 py-3">توضیحات</th>
@@ -50,7 +56,7 @@ export default function ProjectList() {
                   index % 2 === 0 ? "bg-white" : "bg-gray-50"
                 } text-gray-800 text-right`}
               >
-                <td className="px-4 py-3">{index + 1}</td>
+                <td className="px-4 py-3">{offset + index + 1}</td>
                 <td className="px-4 py-3 font-medium">{project.name}</td>
                 <td className="px-4 py-3 truncate">
                   {project.description || "مشخص نشده"}
@@ -59,11 +65,11 @@ export default function ProjectList() {
                 <td className="px-4 py-3">{project.due_date || "مشخص نشده"}</td>
                 <td className="px-4 py-3">
                   {project.status === "تکمیل شده" ? (
-                    <span className="text-green-600 bg-green-100 px-2 py-1 rounded-full text-sm">
+                    <span className="px-2 py-1 text-sm text-green-600 bg-green-100 rounded-full">
                       تکمیل شده
                     </span>
                   ) : (
-                    <span className="text-gray-500 bg-gray-100 px-2 py-1 rounded-full text-sm">
+                    <span className="px-2 py-1 text-sm text-gray-500 bg-gray-100 rounded-full">
                       نامشخص
                     </span>
                   )}
@@ -78,12 +84,22 @@ export default function ProjectList() {
           </tbody>
         </table>
       </div>
-      <div className="flex justify-between items-center mt-6">
-        <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
+      <div className="flex items-center justify-between mt-6">
+        <button
+          className="px-4 py-2 text-gray-700 bg-gray-200 rounded hover:bg-gray-300"
+          onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+          disabled={page === 1}
+        >
           صفحه قبل
         </button>
-        <span className="text-gray-600">صفحه 1 از 20</span>
-        <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
+        <span className="text-gray-600">
+          صفحه {page} از {Math.ceil(100 / limit)}{" "}
+          {/* فرض کنید 100 آیتم کلی دارید */}
+        </span>
+        <button
+          className="px-4 py-2 text-gray-700 bg-gray-200 rounded hover:bg-gray-300"
+          onClick={() => setPage((prev) => prev + 1)}
+        >
           صفحه بعد
         </button>
       </div>
