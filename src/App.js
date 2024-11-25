@@ -1,4 +1,4 @@
-import logo from "./logo.svg";
+
 import "./App.css";
 import { Route, Routes } from "react-router";
 import ProjectList from "./pages/ProjectList";
