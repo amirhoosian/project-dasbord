@@ -28,35 +28,40 @@ export default function ProjectList() {
 
   return (
     <div className="container p-4 mx-auto mt-10 rtl">
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.6.0/css/fontawesome.min.css"
+        integrity="sha384-NvKbDTEnL+A8F/AA5Tc5kmMLSJHUO868P+lDtTpJIeQdGYaUIuLr4lVGOEA1OcMy"
+        crossorigin="anonymous"
+      ></link>
       {/* عنوان و دکمه ایجاد پروژه */}
       <div className="flex items-center justify-between mb-6">
-        <button className="flex items-center px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">
+        <button className="flex items-center px-4 py-2 text-blue-500 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-blue-50">
           <span>ایجاد پروژه جدید</span>
-          <span className="ml-2 text-xl font-bold">+</span>
+
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="2"
+            stroke="currentColor"
+            className="w-5 h-5 ml-2"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 4.5v15m7.5-7.5h-15"
+            />
+          </svg>
         </button>
         <h1 className="text-xl font-bold text-right">لیست پروژه‌ها</h1>
       </div>
 
       {/* جدول پروژه‌ها */}
-      <div className="overflow-hidden bg-white border border-gray-200 rounded-lg shadow-md">
-        <table className="w-full border-collapse table-auto">
+      <div className="overflow-hidden bg-white border border-gray-200 rounded-lg rounded-b">
+        <table className="w-full text-right border-collapse table-auto dir-rtl">
           <thead>
-            <tr className="text-right text-gray-700">
-              <th className="px-6 py-4 text-sm font-semibold text-gray-600">
-                عملیات
-              </th>
-              <th className="px-6 py-4 text-sm font-semibold text-gray-600">
-                وضعیت
-              </th>
-              <th className="px-6 py-4 text-sm font-semibold text-gray-600">
-                تاریخ پایان
-              </th>
-              <th className="px-6 py-4 text-sm font-semibold text-gray-600">
-                تاریخ شروع
-              </th>
-              <th className="px-6 py-4 text-sm font-semibold text-gray-600">
-                توضیحات
-              </th>
+            <tr className="text-gray-700">
               <th className="px-6 py-4 text-sm font-semibold text-gray-600">
                 نام
               </th>
@@ -65,6 +70,7 @@ export default function ProjectList() {
               </th>
             </tr>
           </thead>
+
           <tbody>
             {data.project.slice(0, 3).map((project, index) => (
               <tr
@@ -73,11 +79,25 @@ export default function ProjectList() {
                   index % 2 !== 0 ? "bg-white" : "bg-gray-50"
                 } text-gray-800 text-right`}
               >
-                <td className="px-6 py-4 text-center">
-                  <button className="text-gray-500 hover:text-gray-700">
-                    ...
-                  </button>
+                {/* ستون اعداد */}
+                <td className="px-6 py-4 text-sm">{index + 1}</td>
+
+                {/* ستون نام */}
+                <td className="px-6 py-4 text-sm font-medium">
+                  {project.name}
                 </td>
+
+                {/* ستون توضیحات */}
+                <td className="px-6 py-4 text-sm truncate">
+                  {project.description || "مشخص نشده"}
+                </td>
+
+                {/* ستون تاریخ شروع */}
+                <td className="px-6 py-4 text-sm">
+                  {project.start_date || "مشخص نشده"}
+                </td>
+
+                {/* ستون وضعیت */}
                 <td className="px-6 py-4 text-sm">
                   {project.status === "تکمیل شده" ? (
                     <span className="px-2 py-1 text-xs text-green-600 bg-green-100 rounded-full">
@@ -89,19 +109,13 @@ export default function ProjectList() {
                     </span>
                   )}
                 </td>
-                <td className="px-6 py-4 text-sm">
-                  {project.due_date || "مشخص نشده"}
+
+                {/* ستون عملیات */}
+                <td className="px-6 py-4 text-center">
+                  <button className="text-gray-500 hover:text-gray-700">
+                    ...
+                  </button>
                 </td>
-                <td className="px-6 py-4 text-sm">
-                  {project.start_date || "مشخص نشده"}
-                </td>
-                <td className="px-6 py-4 text-sm truncate">
-                  {project.description || "مشخص نشده"}
-                </td>
-                <td className="px-6 py-4 text-sm font-medium">
-                  {project.name}
-                </td>
-                <td className="px-6 py-4 text-sm">{index + 1}</td>
               </tr>
             ))}
           </tbody>
@@ -109,25 +123,53 @@ export default function ProjectList() {
       </div>
 
       {/* دکمه‌های صفحه‌بندی */}
-      <div className="flex items-center justify-between mt-6">
-        <div className="flex items-center">
+      <div className="flex items-center justify-between border border-gray-200 rounded-lg rounded-t">
+        <div className="flex items-center mt-4 mb-4">
           <button
-            className={`px-4 py-2 ${
+            className="flex w-32 py-2 ml-6 text-gray-700 rounded tems-center f border-btn hover:bg-gray-300"
+            onClick={() => setPage((prev) => prev + 1)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="2"
+              stroke="currentColor"
+              className="w-5 h-5 ml-2"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+            <span>صفحه بعد</span>
+          </button>
+          <button
+            className={`flex items-center px-4 py-2 rounded ${
               page === 1
                 ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                : "bg-white text-gray-700 hover:bg-gray-300 border-btn"
             } rounded`}
             onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
             disabled={page === 1}
           >
-            صفحه قبل
-          </button>
+            <span>صفحه قبل</span>
 
-          <button
-            className="px-4 py-2 ml-6 text-gray-700 bg-gray-200 rounded hover:bg-gray-300"
-            onClick={() => setPage((prev) => prev + 1)}
-          >
-            صفحه بعد
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="2"
+              stroke="currentColor"
+              className="w-5 h-5 ml-2"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
           </button>
         </div>
 

@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.dir-rtl {
+  direction: rtl;
+}
+
+.rounded-t {
+  border-top-left-radius: 0rem;
+  border-top-right-radius: 0rem;
+}
+
+.rounded-b {
+  border-bottom-left-radius: 0rem;
+  border-bottom-right-radius: 0rem;
+}
+
+.border-btn {
+  border: 2px solid blue;
+}
